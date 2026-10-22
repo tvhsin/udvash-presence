@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Udvash Discord RPC",
+  "version": "1.0.0",
+  "description": "Shows your Udvash Online class status on Discord",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://online.udvash-unmesh.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://online.udvash-unmesh.com/Routine/ClassDetails*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Udvash Discord RPC"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

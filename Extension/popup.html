@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 350px;
+            min-height: 400px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .container {
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .status-section {
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff4757;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-indicator.active {
+            background: #2ed573;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .status-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .status-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .status-label {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-value {
+            font-size: 14px;
+            font-weight: 500;
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #2ed573;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .info-text {
+            font-size: 12px;
+            opacity: 0.7;
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.4;
+        }
+        
+        .error-message {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid rgba(255, 71, 87, 0.4);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+        
+        .success-message {
+            background: rgba(46, 213, 115, 0.2);
+            border: 1px solid rgba(46, 213, 115, 0.4);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📚</div>
+            <div class="title">Udvash Discord RPC</div>
+            <div class="subtitle">Show your study status on Discord</div>
+        </div>
+        
+        <div id="error-message" class="error-message hidden">
+            <strong>Connection Error:</strong> Make sure your RPC server is running on localhost:3001
+        </div>
+        
+        <div id="success-message" class="success-message hidden">
+            <strong>Connected:</strong> Discord RPC is active!
+        </div>
+        
+        <div class="status-section">
+            <div class="section-title">
+                <div id="status-indicator" class="status-indicator"></div>
+                RPC Status
+            </div>
+            
+            <div class="status-card">
+                <div class="status-row">
+                    <span class="status-label">Server</span>
+                    <span id="server-status" class="status-value">Checking...</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Discord</span>
+                    <span id="discord-status" class="status-value">Checking...</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Page</span>
+                    <span id="page-status" class="status-value">Checking...</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-section">
+            <div class="section-title">Current Class</div>
+            <div class="status-card">
+                <div class="status-row">
+                    <span class="status-label">Subject</span>
+                    <span id="current-subject" class="status-value">None</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Lesson</span>
+                    <span id="current-lesson" class="status-value">None</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Chapter</span>
+                    <span id="current-chapter" class="status-value">None</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="refresh-btn" class="btn btn-secondary">Refresh</button>
+            <button id="test-btn" class="btn btn-primary">Test RPC</button>
+        </div>
+        
+        <div class="controls">
+            <button id="stop-btn" class="btn btn-secondary">Stop RPC</button>
+            <button id="start-btn" class="btn btn-primary hidden">Start RPC</button>
+        </div>
+        
+        <div class="info-text">
+            Visit a class page on Udvash Online to start Discord RPC. Once started, 
+            your status will stay active even when you leave the page. Use "Stop RPC" to manually stop it.
+        </div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
